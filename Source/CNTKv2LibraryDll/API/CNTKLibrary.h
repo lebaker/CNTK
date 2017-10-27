@@ -618,7 +618,6 @@ namespace CNTK
 
         ///
         /// Construct a NDArrayView with newly allocated sparse storage in SparseCSC format on the specified 'device' and initialize its contents
-        /// with the specified Sparse CSC format data.
         ///
         template <typename ElementType>
         CNTK_API NDArrayView(const NDShape& viewShape, const SparseIndexType* colStarts, const SparseIndexType* rowIndices, const ElementType* nonZeroValues, size_t numNonZeroValues, const DeviceDescriptor& device, bool readOnly = false);
@@ -784,6 +783,11 @@ namespace CNTK
         ///
         bool IsReadOnly() const { return m_isReadOnly; }
 
+        ///
+        /// Returns a boolean indicating if 'this' view is slice.
+        ///
+        bool IsSliceView() const { return m_isSliceView; }
+
         // TODO: The set methods should be offered in template from
         ///
         /// Fill 'this' NDArrayView with the specified value. The underlying DataType of 'this' view should be DataType::Float.
@@ -897,6 +901,7 @@ namespace CNTK
         ::CNTK::StorageFormat m_storageFormat;
         NDShape m_viewShape;
         bool m_isReadOnly;
+        bool m_isSliceView;
 
         std::shared_ptr<void> m_tensorView; // Microsoft::MSR::CNTK::TensorView<ElemType>*
     };

@@ -106,8 +106,8 @@ namespace CNTK
         m_isReadOnly = readOnly;
     }
 
-    NDArrayView::NDArrayView(CNTK::DataType dataType, const DeviceDescriptor& device, CNTK::StorageFormat storageType, const NDShape& viewShape, bool readOnly, void* tensorView)
-        : m_dataType(dataType), m_device(device), m_storageFormat(storageType), m_viewShape(viewShape), m_isReadOnly(readOnly)
+    NDArrayView::NDArrayView(CNTK::DataType dataType, const DeviceDescriptor& device, CNTK::StorageFormat storageType, const NDShape& viewShape, bool readOnly, bool isSliceView, void* tensorView)
+        : m_dataType(dataType), m_device(device), m_storageFormat(storageType), m_viewShape(viewShape), m_isReadOnly(readOnly), m_isSliceView(isSliceView)
     {
         m_tensorView = std::shared_ptr<void>(tensorView, [this](void*) {
             switch (m_dataType)
@@ -372,7 +372,8 @@ namespace CNTK
             break;
         }
 
-        return MakeSharedObject<NDArrayView>(GetDataType(), Device(), GetStorageFormat(), sliceViewShape, IsReadOnly() || readOnly, tensorView);
+        bool isSliceView = true;
+        return MakeSharedObject<NDArrayView>(GetDataType(), Device(), GetStorageFormat(), sliceViewShape, IsReadOnly() || readOnly, isSliceView, tensorView);
     }
 
     NDArrayViewPtr NDArrayView::AsShape(const NDShape& newShape) const
